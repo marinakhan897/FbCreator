@@ -75,7 +75,7 @@ def register_facebook_account(email, password, first_name, last_name, birthday, 
     reg = _call(api_url, req, proxy)
     id = reg['new_user_id']
     token = reg['session_info']['access_token']
-    print(f'''
+    print('''\033[1;94m
 -----------GENERATED-----------
 EMAIL : {email}
 ID : {id}
@@ -148,4 +148,4 @@ else:
         if email and password and first_name and last_name and birthday:
             register_facebook_account(email, password, first_name, last_name, birthday, proxy)
 
-print('\x1b[38;5;208m⇼'*60)
+print('\x1b[38;5;94m⇼'*60)
