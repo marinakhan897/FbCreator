@@ -6,15 +6,21 @@ import random
 import string
 import json
 import hashlib
+
 from faker import Faker
 os.system('clear')
 
 print("""\033[1;94m
-
+╔═╗╔═╗────────────
+║║╚╝║║────────────
+║╔╗╔╗╠══╦═╦╦══╦══╗
+║║║║║║╔╗║╔╬╣╔╗║╔╗║
+║║║║║║╔╗║║║║║║║╔╗║
+╚╝╚╝╚╩╝╚╩╝╚╩╝╚╩╝╚╝
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓           
 > › Github :- MARINA KHAN
 > › By      :- MARINA KHAN
-> › Proxy Support Added by MARINA KHAN
+> › AUTO ACCCOUNTS CREATER TOOOL BY JAN x JAN
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛                """)
 print('\x1b[38;5;94m⇼'*60)
 print('\x1b[38;5;22m•'*60)
