@@ -7,7 +7,6 @@ import random
 import string
 import json
 import hashlib
-
 from faker import Faker
 os.system('clear')
 os.system('espeak a-300AUTOCRAETE TOOL BY JAN')
