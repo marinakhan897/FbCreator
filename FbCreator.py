@@ -1,4 +1,5 @@
 import os
+os.system('pkg install espeak')
 import threading
 from queue import Queue
 import requests
@@ -9,8 +10,9 @@ import hashlib
 
 from faker import Faker
 os.system('clear')
-
+os.system('espeak a-300AUTOCRAETE TOOL BY JAN')
 print("""\033[1;94m
+WELLCOME TO AUTO CREATE TOOL BY JAN x JAN
 ╔═╗╔═╗────────────
 ║║╚╝║║────────────
 ║╔╗╔╗╠══╦═╦╦══╦══╗
