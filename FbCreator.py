@@ -16,10 +16,10 @@ print("""\033[1;94m
 > › By      :- MARINA KHAN
 > › Proxy Support Added by MARINA KHAN
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛                """)
-print('\x1b[38;5;208m⇼'*60)
+print('\x1b[38;5;94m⇼'*60)
 print('\x1b[38;5;22m•'*60)
 print('\x1b[38;5;22m•'*60)
-print('\x1b[38;5;208m⇼'*60)
+print('\x1b[38;5;94m⇼'*60)
 
 def generate_random_string(length):
     letters_and_digits = string.ascii_letters + string.digits
