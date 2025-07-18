@@ -6,12 +6,13 @@ import string
 import json
 import hashlib
 from faker import Faker
+os.system('clear')
 
-print(f"""
+print(h"""
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓           
-> › Github :- @jatintiwari0 
-> › By      :- JATIN TIWARI
-> › Proxy Support Added by @coopers-lab
+> › Github :- MARINA KHAN
+> › By      :- MARINA KHAN
+> › Proxy Support Added by MARINA KHAN
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛                """)
 print('\x1b[38;5;208m⇼'*60)
 print('\x1b[38;5;22m•'*60)
@@ -45,7 +46,7 @@ def create_mail_tm_account(proxy=None):
         birthday = fake.date_of_birth(minimum_age=18, maximum_age=45)
         first_name = fake.first_name()
         last_name = fake.last_name()
-        url = "https://www.fakemailgenerator.com/https://www.fakemailgenerator.com/"
+        url = "https://api.mail.tm/accounts"
         headers = {"Content-Type": "application/json"}
         data = {"address": f"{username}@{domain}", "password":password}       
         try:
