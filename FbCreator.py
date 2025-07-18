@@ -112,7 +112,7 @@ def test_proxy(proxy, q, valid_proxies):
 def test_proxy_helper(proxy):
     try:
         response = requests.get('https://api.mail.tm', proxies=proxy, timeout=5)
-        print(f\033[1;94m'Pass: {proxy}')
+        print(f'Pass: {proxy}')
         return response.status_code == 200
     except:
         print(f'Fail: {proxy}')
