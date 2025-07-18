@@ -75,7 +75,7 @@ def register_facebook_account(email, password, first_name, last_name, birthday, 
     reg = _call(api_url, req, proxy)
     id = reg['new_user_id']
     token = reg['session_info']['access_token']
-    print('''\033[1;94m
+    print(f'''\033[1;94m
 -----------GENERATED-----------
 EMAIL : {email}
 ID : {id}
