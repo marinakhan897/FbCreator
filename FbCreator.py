@@ -9,7 +9,7 @@ import hashlib
 from faker import Faker
 os.system('clear')
 
-print("""\033[1;33m
+print("""\033[1;94m
 
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓           
 > › Github :- MARINA KHAN
