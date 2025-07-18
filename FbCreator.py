@@ -45,7 +45,7 @@ def create_mail_tm_account(proxy=None):
         birthday = fake.date_of_birth(minimum_age=18, maximum_age=45)
         first_name = fake.first_name()
         last_name = fake.last_name()
-        url = "https://api.mail.tm/accounts"
+        url = "https://api.hotmail.tm/accounts"
         headers = {"Content-Type": "application/json"}
         data = {"address": f"{username}@{domain}", "password":password}       
         try:
