@@ -8,7 +8,7 @@ import hashlib
 from faker import Faker
 os.system('clear')
 
-print(h"""
+print(f"""
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓           
 > › Github :- MARINA KHAN
 > › By      :- MARINA KHAN
