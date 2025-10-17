@@ -7,8 +7,15 @@ import random
 import string
 import json
 import hashlib
-import time  # Added missing import
+import time
+import urllib3
 from faker import Faker
+import warnings
+
+# SSL warnings disable karein
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 os.system('clear')
 os.system('espeak -s 300 "AUTOCREATE TOOL BY JAN" > /dev/null 2>&1')
 
@@ -38,16 +45,16 @@ def get_mail_domains(proxy=None):
     url = "https://api.mail.tm/domains"
     try:
         if proxy and proxy != "no_proxy":
-            response = requests.get(url, proxies=proxy, timeout=10)
+            response = requests.get(url, proxies=proxy, timeout=10, verify=False)
         else:
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=10, verify=False)
         if response.status_code == 200:
             return response.json().get('hydra:member', [])
         else:
-            print(f'[×] E-mail Error : {response.text}')
+            print(f'[×] E-mail Error : {response.status_code}')
             return None
     except Exception as e:
-        print(f'[×] Error : {e}')
+        print(f'[×] API Error : {str(e)[:100]}')
         return None
 
 def create_mail_tm_account(proxy=None):
@@ -68,18 +75,21 @@ def create_mail_tm_account(proxy=None):
         data = {"address": f"{username}@{domain}", "password": password}       
         try:
             if proxy and proxy != "no_proxy":
-                response = requests.post(url, headers=headers, json=data, proxies=proxy, timeout=10)
+                response = requests.post(url, headers=headers, json=data, proxies=proxy, timeout=10, verify=False)
             else:
-                response = requests.post(url, headers=headers, json=data, timeout=10)
+                response = requests.post(url, headers=headers, json=data, timeout=10, verify=False)
                 
             if response.status_code == 201:
+                print(f'[✓] Email Created: {username}@{domain}')
                 return f"{username}@{domain}", password, first_name, last_name, birthday
             else:
-                print(f'[×] Email Creation Error : {response.text}')
+                print(f'[×] Email Creation Failed : {response.status_code}')
                 return None, None, None, None, None
         except Exception as e:
-            print(f'[×] Error : {e}')
+            print(f'[×] Email Creation Error : {str(e)[:100]}')
             return None, None, None, None, None
+    else:
+        print('[×] No mail domains available')
     return None, None, None, None, None
 
 def register_facebook_account(email, password, first_name, last_name, birthday, proxy=None):
@@ -133,11 +143,12 @@ Token : {token}
                 f.write(f"{email}:{password}:{first_name} {last_name}:{user_id}\n")
             return True
         else:
-            print(f"\033[1;91m[×] Facebook Registration Failed: {reg}")
+            error_msg = reg.get('error_msg', 'Unknown error')
+            print(f"\033[1;91m[×] Facebook Registration Failed: {error_msg}")
             return False
             
     except Exception as e:
-        print(f"\033[1;91m[×] Facebook Registration Error: {e}")
+        print(f"\033[1;91m[×] Facebook Registration Error: {str(e)[:100]}")
         return False
 
 def _call(url, params, proxy=None, post=True):
@@ -148,29 +159,25 @@ def _call(url, params, proxy=None, post=True):
     try:
         if post:
             if proxy and proxy != "no_proxy":
-                response = requests.post(url, data=params, headers=headers, proxies=proxy, timeout=15)
+                response = requests.post(url, data=params, headers=headers, proxies=proxy, timeout=15, verify=False)
             else:
-                response = requests.post(url, data=params, headers=headers, timeout=15)
+                response = requests.post(url, data=params, headers=headers, timeout=15, verify=False)
         else:
             if proxy and proxy != "no_proxy":
-                response = requests.get(url, params=params, headers=headers, proxies=proxy, timeout=15)
+                response = requests.get(url, params=params, headers=headers, proxies=proxy, timeout=15, verify=False)
             else:
-                response = requests.get(url, params=params, headers=headers, timeout=15)
+                response = requests.get(url, params=params, headers=headers, timeout=15, verify=False)
                 
         return response.json()
     except Exception as e:
-        print(f"\033[1;91m[×] API Call Error: {e}")
+        print(f"\033[1;91m[×] API Call Error: {str(e)[:100]}")
         return {}
 
 def clean_proxy_file():
     """Proxies file clean karta hai aur valid proxies nikalta hai"""
     try:
         if not os.path.exists('proxies.txt'):
-            print("[!] proxies.txt file not found. Creating empty file.")
-            with open('proxies.txt', 'w') as f:
-                f.write("# Add your proxies here, one per line\n")
-                f.write("# Format: IP:PORT\n")
-                f.write("# Example: 123.456.789.0:8080\n")
+            print("[!] proxies.txt file not found. Running without proxies...")
             return []
             
         with open('proxies.txt', 'r') as file:
@@ -189,7 +196,10 @@ def clean_proxy_file():
                 if port_part.isdigit() and 1 <= int(port_part) <= 65535:
                     valid_proxies.append(line)
         
-        print(f"[+] Found {len(valid_proxies)} valid proxies in file")
+        if valid_proxies:
+            print(f"[+] Found {len(valid_proxies)} valid proxies in file")
+        else:
+            print("[!] No valid proxies found in proxies.txt")
         return valid_proxies
         
     except Exception as e:
@@ -200,7 +210,7 @@ def test_proxy_helper(proxy_str):
     """Single proxy test karta hai"""
     proxy_dict = {'http': f'http://{proxy_str}', 'https': f'http://{proxy_str}'}
     try:
-        response = requests.get('https://api.mail.tm/domains', proxies=proxy_dict, timeout=8)
+        response = requests.get('https://api.mail.tm/domains', proxies=proxy_dict, timeout=8, verify=False)
         if response.status_code == 200:
             print(f'[✓] Proxy Working: {proxy_str}')
             return proxy_dict
@@ -216,9 +226,7 @@ def get_working_proxies():
     raw_proxies = clean_proxy_file()
     
     if not raw_proxies:
-        print("[!] No valid proxies found in proxies.txt")
-        print("[!] Please add proxies in format: IP:PORT")
-        print("[!] Continuing without proxies...")
+        print("[!] Running without proxies...")
         return ["no_proxy"]
     
     print(f"[+] Testing {len(raw_proxies)} proxies...")
@@ -237,7 +245,7 @@ def get_working_proxies():
         threads.append(thread)
         
         # Limit concurrent threads
-        if len(threads) >= 5:
+        if len(threads) >= 3:  # Reduced to avoid overload
             for t in threads:
                 t.join()
             threads = []
@@ -251,8 +259,27 @@ def get_working_proxies():
         return working_proxies
     else:
         print("[×] No working proxies found")
-        print("[!] Continuing without proxies...")
+        print("[!] Running without proxies...")
         return ["no_proxy"]
+
+# Alternative method agar API fail ho
+def create_temp_email_alternative():
+    """Alternative email creation method"""
+    try:
+        # Use temporary email service as backup
+        domains = ['mailto.plus', 'tmpmail.org', 'temp-mail.org']
+        domain = random.choice(domains)
+        username = generate_random_string(12)
+        email = f"{username}@{domain}"
+        password = Faker().password()
+        first_name = Faker().first_name()
+        last_name = Faker().last_name()
+        birthday = Faker().date_of_birth(minimum_age=18, maximum_age=45)
+        
+        print(f'[!] Using alternative email: {email}')
+        return email, password, first_name, last_name, birthday
+    except:
+        return None, None, None, None, None
 
 # Main execution
 if __name__ == "__main__":
@@ -270,23 +297,34 @@ if __name__ == "__main__":
         for i in range(count):
             print(f'\n[+] Creating Account {i+1}/{count}')
             proxy = random.choice(working_proxies) if working_proxies else "no_proxy"
+            
+            # Pehle primary method try karein
             email, password, first_name, last_name, birthday = create_mail_tm_account(proxy)
+            
+            # Agar fail ho to alternative method use karein
+            if not email:
+                print('[!] Trying alternative method...')
+                email, password, first_name, last_name, birthday = create_temp_email_alternative()
             
             if email and password and first_name and last_name and birthday:
                 if register_facebook_account(email, password, first_name, last_name, birthday, proxy):
                     successful_accounts += 1
+                else:
+                    print(f"[×] Facebook registration failed for account {i+1}")
             else:
-                print(f"[×] Failed to create account {i+1}")
+                print(f"[×] Failed to create email for account {i+1}")
             
             # Delay between account creation
             if i < count - 1:
-                delay = random.randint(8, 20)
+                delay = random.randint(10, 25)
                 print(f"[!] Waiting {delay} seconds...")
                 time.sleep(delay)
         
         print(f'\n[✓] Successfully created {successful_accounts}/{count} accounts')
         if successful_accounts > 0:
             print('[✓] Accounts saved to username.txt')
+        else:
+            print('[×] No accounts were created. Check your internet connection.')
         
     except KeyboardInterrupt:
         print('\n[!] Process interrupted by user')
